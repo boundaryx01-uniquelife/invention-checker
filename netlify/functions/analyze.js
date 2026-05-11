@@ -79,8 +79,8 @@ exports.handler = async (event) => {
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 8192,
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 4096,
         system: ANALYSIS_PROMPT,
         messages: [{ role: 'user', content: `다음은 학생 발명품 설명서 내용입니다:\n\n${text}` }],
       }),
