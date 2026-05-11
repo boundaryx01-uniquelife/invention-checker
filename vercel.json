@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/analyze.cjs": { "maxDuration": 60 },
-    "api/search.cjs":  { "maxDuration": 15 }
+    "api/search.cjs": { "maxDuration": 15 }
   }
 }
+

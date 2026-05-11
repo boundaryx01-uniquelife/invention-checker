@@ -87,13 +87,42 @@ async function analyzeWithClaude(text) {
     body: JSON.stringify({ text }),
   })
 
-  const data = await res.json()
-  if (!res.ok) throw new Error(data?.error?.message || data?.error || `분석 서버 오류 (${res.status})`)
+  const contentType = res.headers.get('content-type') || ''
+  if (!res.ok || !contentType.includes('text/event-stream')) {
+    let errMsg = `서버 오류 (${res.status})`
+    try { const d = await res.json(); errMsg = d?.error || errMsg } catch {}
+    throw new Error(errMsg)
+  }
 
-  const raw = data.content?.[0]?.text || ''
-  const repaired = repairJson(raw)
+  const reader = res.body.getReader()
+  const decoder = new TextDecoder()
+  let accumulated = ''
+  let buffer = ''
+
+  while (true) {
+    const { done, value } = await reader.read()
+    if (done) break
+
+    buffer += decoder.decode(value, { stream: true })
+    const lines = buffer.split('\n')
+    buffer = lines.pop()
+
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue
+      const data = line.slice(6).trim()
+      if (!data || data === '[DONE]') continue
+      try {
+        const parsed = JSON.parse(data)
+        if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
+          accumulated += parsed.delta.text
+        }
+      } catch {}
+    }
+  }
+
+  const repaired = repairJson(accumulated)
   if (!repaired) {
-    const preview = raw.slice(0, 300) || '(빈 응답)'
+    const preview = accumulated.slice(0, 300) || '(빈 응답)'
     throw new Error(`JSON 파싱 불가. 응답 앞부분:\n${preview}`)
   }
   return JSON.parse(repaired)
