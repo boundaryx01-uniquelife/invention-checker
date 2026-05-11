@@ -81,7 +81,7 @@ function repairJson(raw) {
 // ── API calls via Netlify Functions ───────────────────────────────────────
 
 async function analyzeWithClaude(text) {
-  const res = await fetch('/.netlify/functions/analyze', {
+  const res = await fetch('/api/analyze', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text }),
@@ -101,7 +101,7 @@ async function analyzeWithClaude(text) {
 
 async function fetchSearchResults(query, type) {
   try {
-    const res = await fetch('/.netlify/functions/search', {
+    const res = await fetch('/api/search', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query, type }),
