@@ -1,0 +1,17 @@
+KRX API https://openapi.krx.co.kr
+uniquelife / 
+
+claude api key
+signal : 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
+
+1st : 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
+
+openai api key
+signal : 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
+
+KRX key
+4E54A71E0AC94AE6B527760D25AC30F61C164B37
+
+
+Signal_mung_Bot : 8605552205:AAG35tVB8aO1HRZ_biVxQyUnfnTG06dYhYQ
+chat id : 63649971
